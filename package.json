@@ -6,7 +6,7 @@
   "scripts": {
     "start": "serverless offline start --stage local",
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --verbose --detectOpenHandles",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "docker:build": "docker-compose build",
@@ -25,7 +25,9 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "@types/mocha": "^10.0.9",
     "@types/node": "^22.8.1",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.11.0",
     "@typescript-eslint/parser": "^8.11.0",
     "eslint": "^9.13.0",
