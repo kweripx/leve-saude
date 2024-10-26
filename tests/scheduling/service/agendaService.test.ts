@@ -1,5 +1,5 @@
-import { AgendaService } from './agendaService';
-import { medicosMock } from '../mocks/medicosMock';
+import { AgendaService } from '../../../src/agenda/service/agendaService';
+import { doctorsMock } from '../../../src/agenda/mocks/doctorsScheduleMock';
 
 describe('AgendaService', () => {
   let agendaService: AgendaService;
@@ -11,9 +11,9 @@ describe('AgendaService', () => {
   describe('getAgendas', () => {
     it('should return list of doctors with their schedules', async () => {
       const result = await agendaService.getAgendas();
-      expect(result).toEqual(medicosMock);
+      expect(result).toEqual(doctorsMock);
       expect(result.length).toBe(2);
-      expect(result[0].nome).toBe('Dr. João Silva');
+      expect(result[0].name).toBe('Dr. João Silva');
     });
   });
 });
