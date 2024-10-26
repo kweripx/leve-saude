@@ -1,0 +1,48 @@
+service: medical-appointments-api
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-typescript
+  - serverless-localstack
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  environment:
+    NODE_ENV: ${opt:stage, 'development'}
+
+functions:
+  getAgendas:
+    handler: src/agenda/controller/agendaController.getAgendas
+    events:
+      - http:
+          path: /agendas
+          method: get
+          cors: true
+
+  createAppointment:
+    handler: src/agendamento/controller/agendamentoController.createAppointment
+    events:
+      - http:
+          path: /agendamento
+          method: post
+          cors: true
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+    host: 0.0.0.0
+  localstack:
+    stages:
+      - local
+      - dev
+    host: http://localstack
+    endpoints:
+      Lambda: http://localstack:4566
+      APIGateway: http://localstack:4566
+      CloudFormation: http://localstack:4566
+      DynamoDB: http://localstack:4566
+    lambda:
+      mountCode: true
