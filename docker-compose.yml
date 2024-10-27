@@ -12,7 +12,7 @@ services:
       - /app/node_modules
     ports:
       - "3000:3000"
-      - "9229:9229" # para debug
+      - "9229:9229"
     environment:
       - NODE_ENV=development
       - AWS_ACCESS_KEY_ID=localstack
@@ -20,14 +20,14 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
       - LAMBDA_ENDPOINT=http://localstack:4566
       - AWS_ENDPOINT=http://localstack:4566
+      - SERVICES=serverless
     depends_on:
-      - localstack
+      localstack:
+        condition: service_healthy
     networks:
       - app-network
     command: npm run start:dev
-    # Configuração de reinicialização para desenvolvimento
     restart: unless-stopped
-    # Configuração de healthcheck
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
@@ -42,7 +42,7 @@ services:
     environment:
       - SERVICES=lambda,apigateway,dynamodb,cloudformation,s3,sqs
       - DEBUG=1
-      - DATA_DIR=/tmp/localstack/data
+      - DATA_DIR=/tmp/localstack_data
       - DOCKER_HOST=unix:///var/run/docker.sock
       - LAMBDA_EXECUTOR=docker
       - LAMBDA_REMOTE_DOCKER=false
@@ -50,15 +50,14 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
       - AWS_ACCESS_KEY_ID=localstack
       - AWS_SECRET_ACCESS_KEY=localstack
-      # Configurações de desempenho
       - LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT=90
       - LAMBDA_DOCKER_FLAGS=-m 512M
+      - HOSTNAME_EXTERNAL=localstack
     volumes:
-      - "./.localstack:/tmp/localstack"
+      - localstack_data:/tmp/localstack_data
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - app-network
-    # Configuração de healthcheck para o LocalStack
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
       interval: 30s
@@ -80,50 +79,9 @@ services:
     networks:
       - app-network
 
-  # Serviço para monitoramento
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      - app-network
-
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    ports:
-      - "3001:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-    volumes:
-      - grafana-data:/var/lib/grafana
-    depends_on:
-      - prometheus
-    networks:
-      - app-network
-
-volumes:
-  grafana-data:
-
 networks:
   app-network:
     driver: bridge
 
-# Configurações de deploy com diferentes ambientes
-x-environments: &environments
-  development:
-    - NODE_ENV=development
-    - AWS_ACCESS_KEY_ID=localstack
-    - AWS_SECRET_ACCESS_KEY=localstack
-  staging:
-    - NODE_ENV=staging
-    - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-    - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-  production:
-    - NODE_ENV=production
-    - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-    - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+volumes:
+  localstack_data:
