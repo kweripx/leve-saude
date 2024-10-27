@@ -1,6 +1,6 @@
 export interface IDoctor {
- id: string;  
- name: string;
- expertise: string;
- available_hours: string[];
+  id: string;
+  name: string;
+  expertise: string;
+  available_hours: string[];
 }
