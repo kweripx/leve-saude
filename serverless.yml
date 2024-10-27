@@ -9,9 +9,12 @@ provider:
   name: aws
   runtime: nodejs18.x
   stage: ${opt:stage, 'dev'}
-  region: ${opt:region, 'us-east-1'}
+  region: us-east-1
   environment:
     NODE_ENV: ${opt:stage, 'development'}
+  endpointType: REGIONAL
+  apiGateway:
+    shouldStartNameWithService: true
 
 functions:
   getAgendas:
@@ -23,7 +26,7 @@ functions:
           cors: true
 
   createAppointment:
-    handler: src/agendamento/controller/agendamentoController.createAppointment
+    handler: src/scheduling/controller/scheduleController.createAppointment
     events:
       - http:
           path: /agendamento
@@ -38,11 +41,15 @@ custom:
     stages:
       - local
       - dev
-    host: http://localstack
+    host: localstack 
+    docker:
+      sudo: false
+    lambda:
+      mountCode: true
     endpoints:
       Lambda: http://localstack:4566
       APIGateway: http://localstack:4566
       CloudFormation: http://localstack:4566
       DynamoDB: http://localstack:4566
-    lambda:
-      mountCode: true
+      S3: http://localstack:4566
+      SQS: http://localstack:4566

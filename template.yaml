@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Medical Appointments API
+
+Resources:
+  GetAgendasFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/agenda/controller/getAgendas.handler
+      Runtime: nodejs14.x
+      Events:
+        GetAgendas:
+          Type: Api
+          Properties:
+            Path: /agendas
+            Method: get
+
+  CreateAgendamentoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/agendamento/controller/createAgendamento.handler
+      Runtime: nodejs14.x
+      Events:
+        CreateAgendamento:
+          Type: Api
+          Properties:
+            Path: /agendamento
+            Method: post
+
+Outputs:
+  ApiURL:
+    Description: "API Gateway endpoint URL for Prod environment"
+    Value: 
+      Fn::Sub: "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
