@@ -37,8 +37,8 @@ jobs:
     - name: Install dependencies
       run: pnpm install
       
-    - name: Run build step (if present)
-      run: pnpm run build --if-present
+    - name: Run build step
+      run: pnpm run build
 
     - name: Run tests with Jest
       run: pnpm test
