@@ -81,14 +81,14 @@ O LocalStack simula serviços AWS localmente:
 - Retorna lista de médicos com horários disponíveis
 ```json
 {
-  "medicos": [
+  "doctors": [
     {
-      "id": 1,
-      "nome": "Dr. João Silva",
-      "especialidade": "Cardiologista",
-      "horarios_disponiveis": [
-        "2024-10-05 09:00",
-        "2024-10-05 10:00"
+      "id": "27516bc7-5c94-47b4-bcc9-219c415592e0",
+      "name": "Dr. João Silva",
+      "expertise": "Cardiologista",
+      "available_hours": [
+        "2024-10-05T09:00:00.000Z",
+        "2024-10-05T10:00:00.000Z"
       ]
     }
   ]
@@ -100,9 +100,9 @@ O LocalStack simula serviços AWS localmente:
 - Cria novo agendamento
 ```json
 {
-  "medico_id": 1,
-  "paciente_nome": "Carlos Almeida",
-  "data_horario": "2024-10-05 09:00"
+  "doctor_id": "27516bc7-5c94-47b4-bcc9-219c415592e0",
+  "patient_name": "Carlos Almeida",
+  "appointment_datetime": "2024-10-05T09:00:00.000Z"
 }
 ```
 
