@@ -7,7 +7,6 @@ export class CreateScheduleDto {
 
     @IsNotEmpty()
     @IsString()
-    @IsNumber()
     patient_name!: string;
 
     @IsNotEmpty()
